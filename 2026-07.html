@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="zh-TW"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>消防案件品管分配系統</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SheetJS (xlsx) library for reading and writing Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      font-size: 1.125rem;
+    }
+
+    .excel-table {
+      border-collapse: collapse;
+      border: 2px solid #000000;
+    }
+
+    .excel-table th, .excel-table td {
+      border: 1px solid #000000;
+    }
+
+    .cell-input {
+      outline: none;
+      background: transparent;
+      text-align: center;
+      width: 100%;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .cell-input:focus {
+      background-color: #ffffff;
+      box-shadow: inset 0 0 0 2px #2563eb;
+    }
+
+    .row-selected {
+      outline: 3px solid #2563eb !important;
+      outline-offset: -2px;
+      box-shadow: 0 4px 12px -2px rgba(37, 99, 235, 0.4);
+    }
+
+    .modal-active {
+      display: flex !important;
+    }
+  </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-6{bottom:1.5rem}.right-6{right:1.5rem}.right-0\.5{right:0.125rem}.top-0\.5{top:0.125rem}.z-50{z-index:50}.z-\[100\]{z-index:100}.mx-auto{margin-left:auto;margin-right:auto}.my-5{margin-top:1.25rem;margin-bottom:1.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mr-1{margin-right:0.25rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.hidden{display:none}.h-10{height:2.5rem}.h-16{height:4rem}.h-7{height:1.75rem}.h-3\.5{height:0.875rem}.max-h-\[90vh\]{max-height:90vh}.min-h-screen{min-height:100vh}.min-h-\[52px\]{min-height:52px}.w-10{width:2.5rem}.w-16{width:4rem}.w-20{width:5rem}.w-24{width:6rem}.w-28{width:7rem}.w-3{width:0.75rem}.w-32{width:8rem}.w-36{width:9rem}.w-40{width:10rem}.w-48{width:12rem}.w-full{width:100%}.w-3\.5{width:0.875rem}.min-w-\[110px\]{min-width:110px}.max-w-5xl{max-width:64rem}.max-w-7xl{max-width:80rem}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.border-collapse{border-collapse:collapse}.translate-y-3{--tw-translate-y:0.75rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-0{--tw-translate-y:0px;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.cursor-not-allowed{cursor:not-allowed}.select-none{-webkit-user-select:none;user-select:none}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-slate-200 > :not([hidden]) ~ :not([hidden]){--tw-divide-opacity:1;border-color:rgb(226 232 240 / var(--tw-divide-opacity, 1))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.whitespace-nowrap{white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-l-4{border-left-width:4px}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138 / var(--tw-border-opacity, 1))}.border-black{--tw-border-opacity:1;border-color:rgb(0 0 0 / var(--tw-border-opacity, 1))}.border-blue-200{--tw-border-opacity:1;border-color:rgb(191 219 254 / var(--tw-border-opacity, 1))}.border-rose-200{--tw-border-opacity:1;border-color:rgb(254 205 211 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.border-amber-600{--tw-border-opacity:1;border-color:rgb(217 119 6 / var(--tw-border-opacity, 1))}.border-emerald-600{--tw-border-opacity:1;border-color:rgb(5 150 105 / var(--tw-border-opacity, 1))}.border-indigo-600{--tw-border-opacity:1;border-color:rgb(79 70 229 / var(--tw-border-opacity, 1))}.border-rose-600{--tw-border-opacity:1;border-color:rgb(225 29 72 / var(--tw-border-opacity, 1))}.border-sky-600{--tw-border-opacity:1;border-color:rgb(2 132 199 / var(--tw-border-opacity, 1))}.border-teal-600{--tw-border-opacity:1;border-color:rgb(13 148 136 / var(--tw-border-opacity, 1))}.border-violet-600{--tw-border-opacity:1;border-color:rgb(124 58 237 / var(--tw-border-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-emerald-100{--tw-bg-opacity:1;background-color:rgb(209 250 229 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-emerald-500\/20{background-color:rgb(16 185 129 / 0.2)}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-purple-600{--tw-bg-opacity:1;background-color:rgb(147 51 234 / var(--tw-bg-opacity, 1))}.bg-rose-100{--tw-bg-opacity:1;background-color:rgb(255 228 230 / var(--tw-bg-opacity, 1))}.bg-rose-50{--tw-bg-opacity:1;background-color:rgb(255 241 242 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/60{background-color:rgb(15 23 42 / 0.6)}.bg-slate-900\/95{background-color:rgb(15 23 42 / 0.95)}.bg-teal-600{--tw-bg-opacity:1;background-color:rgb(13 148 136 / var(--tw-bg-opacity, 1))}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-\[\#fff2cc\]{--tw-bg-opacity:1;background-color:rgb(255 242 204 / var(--tw-bg-opacity, 1))}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-amber-700{--tw-bg-opacity:1;background-color:rgb(180 83 9 / var(--tw-bg-opacity, 1))}.bg-emerald-700{--tw-bg-opacity:1;background-color:rgb(4 120 87 / var(--tw-bg-opacity, 1))}.bg-indigo-100{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.bg-indigo-700{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.bg-rose-700{--tw-bg-opacity:1;background-color:rgb(190 18 60 / var(--tw-bg-opacity, 1))}.bg-sky-100{--tw-bg-opacity:1;background-color:rgb(224 242 254 / var(--tw-bg-opacity, 1))}.bg-sky-700{--tw-bg-opacity:1;background-color:rgb(3 105 161 / var(--tw-bg-opacity, 1))}.bg-teal-100{--tw-bg-opacity:1;background-color:rgb(204 251 241 / var(--tw-bg-opacity, 1))}.bg-teal-700{--tw-bg-opacity:1;background-color:rgb(15 118 110 / var(--tw-bg-opacity, 1))}.bg-violet-100{--tw-bg-opacity:1;background-color:rgb(237 233 254 / var(--tw-bg-opacity, 1))}.bg-violet-700{--tw-bg-opacity:1;background-color:rgb(109 40 217 / var(--tw-bg-opacity, 1))}.bg-\[\#c6e0b4\]{--tw-bg-opacity:1;background-color:rgb(198 224 180 / var(--tw-bg-opacity, 1))}.p-3{padding:0.75rem}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.p-1{padding:0.25rem}.p-1\.5{padding:0.375rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.pt-2{padding-top:0.5rem}.text-left{text-align:left}.text-center{text-align:center}.align-middle{vertical-align:middle}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-5xl{font-size:3rem;line-height:1}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-\[11px\]{font-size:11px}.text-\[10px\]{font-size:10px}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.italic{font-style:italic}.leading-none{line-height:1}.leading-snug{line-height:1.375}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.tracking-widest{letter-spacing:0.1em}.tracking-wider{letter-spacing:0.05em}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70 / var(--tw-text-opacity, 1))}.text-purple-600{--tw-text-opacity:1;color:rgb(147 51 234 / var(--tw-text-opacity, 1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-amber-950{--tw-text-opacity:1;color:rgb(69 26 3 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-emerald-950{--tw-text-opacity:1;color:rgb(2 44 34 / var(--tw-text-opacity, 1))}.text-indigo-950{--tw-text-opacity:1;color:rgb(30 27 75 / var(--tw-text-opacity, 1))}.text-rose-950{--tw-text-opacity:1;color:rgb(76 5 25 / var(--tw-text-opacity, 1))}.text-sky-950{--tw-text-opacity:1;color:rgb(8 47 73 / var(--tw-text-opacity, 1))}.text-teal-950{--tw-text-opacity:1;color:rgb(4 47 46 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.text-violet-950{--tw-text-opacity:1;color:rgb(46 16 101 / var(--tw-text-opacity, 1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-blue-800{--tw-text-opacity:1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.opacity-0{opacity:0}.opacity-60{opacity:0.6}.opacity-100{opacity:1}.opacity-80{opacity:0.8}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-200{transition-duration:200ms}.duration-300{transition-duration:300ms}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-purple-700:hover{--tw-bg-opacity:1;background-color:rgb(126 34 206 / var(--tw-bg-opacity, 1))}.hover\:bg-rose-100:hover{--tw-bg-opacity:1;background-color:rgb(255 228 230 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-300:hover{--tw-bg-opacity:1;background-color:rgb(203 213 225 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.hover\:bg-teal-700:hover{--tw-bg-opacity:1;background-color:rgb(15 118 110 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-300:hover{--tw-bg-opacity:1;background-color:rgb(110 231 183 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-200:hover{--tw-bg-opacity:1;background-color:rgb(167 243 208 / var(--tw-bg-opacity, 1))}.hover\:bg-sky-200:hover{--tw-bg-opacity:1;background-color:rgb(186 230 253 / var(--tw-bg-opacity, 1))}.hover\:bg-violet-200:hover{--tw-bg-opacity:1;background-color:rgb(221 214 254 / var(--tw-bg-opacity, 1))}.hover\:bg-amber-200:hover{--tw-bg-opacity:1;background-color:rgb(253 230 138 / var(--tw-bg-opacity, 1))}.hover\:bg-rose-200:hover{--tw-bg-opacity:1;background-color:rgb(254 205 211 / var(--tw-bg-opacity, 1))}.hover\:bg-teal-200:hover{--tw-bg-opacity:1;background-color:rgb(153 246 228 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-200:hover{--tw-bg-opacity:1;background-color:rgb(199 210 254 / var(--tw-bg-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:text-blue-700:hover{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.hover\:text-rose-600:hover{--tw-text-opacity:1;color:rgb(225 29 72 / var(--tw-text-opacity, 1))}.hover\:opacity-100:hover{opacity:1}.focus\:border-blue-600:focus{--tw-border-opacity:1;border-color:rgb(37 99 235 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-purple-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(168 85 247 / var(--tw-ring-opacity, 1))}.active\:scale-\[0\.99\]:active{--tw-scale-x:0.99;--tw-scale-y:0.99;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@media (min-width: 768px){.md\:p-6{padding:1.5rem}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}.md\:text-base{font-size:1rem;line-height:1.5rem}.md\:text-lg{font-size:1.125rem;line-height:1.75rem}.md\:text-sm{font-size:0.875rem;line-height:1.25rem}}</style></head>
+<body class="p-3 md:p-6 min-h-screen flex flex-col items-center">
+
+  <!-- Password Lock Screen for Protected Exported Files -->
+  <div id="passwordLockOverlay" class="fixed inset-0 bg-slate-900/95 backdrop-blur-md z-[100] hidden flex-col items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md p-8 text-center animate-in fade-in zoom-in duration-200">
+      <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <h3 class="text-2xl font-black text-slate-800 tracking-tight">雲林縣消防局 OHCA 案件品管分配表</h3>
+      <p class="text-sm text-slate-500 mt-2 mb-6">此頁面受密碼保護，請輸入檢視密碼以解鎖資料</p>
+      
+      <div class="space-y-4">
+        <div class="relative">
+          <input id="decryptPasswordInput" type="password" placeholder="請輸入訪問密碼" class="w-full text-center text-lg px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-600 focus:outline-none transition tracking-widest font-bold">
+        </div>
+        <div id="unlockErrorMsg" class="text-rose-600 text-sm font-semibold hidden flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-circle-exclamation"></i> 密碼錯誤，請重新確認！
+        </div>
+        <button id="unlockSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white text-lg font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-key"></i> 解鎖檢視
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full max-w-7xl space-y-6">
+
+    <!-- Top Management Action Bar (Hidden in Read-Only Mode) -->
+    <header id="adminToolbar" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 flex items-center gap-3">
+          <i class="fa-solid fa-truck-medical text-rose-600"></i>
+          各分隊案件數量與品管分配系統
+        </h1>
+        <p class="text-sm md:text-base text-slate-500 mt-1">
+          支援匯入 OHCA 案件清單自動統計案件數；匯出唯讀 HTML 可直接設定「訪問密碼」上傳 GitHub Pages。
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2.5">
+        <!-- Excel Upload Button -->
+        <label for="excelFileInput" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-base font-bold px-3.5 py-2.5 rounded-lg shadow-sm cursor-pointer transition">
+          <i class="fa-solid fa-file-import text-lg"></i> 匯入案件 EXCEL
+        </label>
+        <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" class="hidden">
+
+        <!-- Auto Balance Button -->
+        <button id="autoAssignBtn" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-base font-bold px-3.5 py-2.5 rounded-lg shadow-sm transition">
+          <i class="fa-solid fa-wand-magic-sparkles text-lg"></i> 自動平均分案
+        </button>
+
+        <!-- Export Locked Result HTML with Password Setting -->
+        <button id="exportReadOnlyHtmlBtn" class="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-base font-bold px-3.5 py-2.5 rounded-lg shadow-sm transition" title="僅保留分配結果表格並鎖定修改，支援加密上鎖">
+          <i class="fa-solid fa-shield-halved text-lg"></i> 匯出分配結果 HTML
+        </button>
+
+        <!-- Export Result Excel -->
+        <button id="exportExcelBtn" class="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-base font-bold px-3.5 py-2.5 rounded-lg shadow-sm transition">
+          <i class="fa-solid fa-file-excel text-lg"></i> 匯出 Excel
+        </button>
+
+        <!-- Reset Button -->
+        <button id="resetAssignmentsBtn" class="flex items-center gap-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-base font-bold px-3 py-2.5 rounded-lg border border-rose-200 transition">
+          <i class="fa-solid fa-rotate-left"></i> 清空分配
+        </button>
+      </div>
+    </header>
+
+    <!-- Operational Notification Card (Hidden in Read-Only Mode) -->
+    <div id="adminNoticeCard" class="bg-blue-50 border border-blue-200 text-blue-900 px-5 py-3.5 rounded-lg flex flex-wrap items-center justify-between gap-2 text-base md:text-lg">
+      <div class="flex items-center gap-2.5">
+        <i class="fa-solid fa-circle-info text-blue-600 text-xl"></i>
+        <span id="currentStatusText">目前選取人員：<strong class="text-blue-700 underline text-lg font-bold">國仲</strong>。點選上方有案件的分隊即可指派（0件分隊自動略過）。</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="statProgress" class="font-bold text-blue-900 bg-blue-100 px-3 py-1 rounded text-base">已指派: 20 / 25 分隊</span>
+        <span id="importedCasesBadge" class="font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded text-base"><i class="fa-solid fa-database mr-1"></i>已載入 45 筆案件</span>
+      </div>
+    </div>
+
+    <!-- Read-Only Mode Welcome Banner (Shown only when IS_READ_ONLY === true) -->
+    <div id="readOnlyBanner" class="hidden bg-slate-900 text-white p-5 rounded-xl shadow-md flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-clipboard-check text-emerald-400"></i>
+          <span id="readOnlyTitle">各分隊案件品管分配結果</span>
+        </h2>
+        <p class="text-slate-300 text-base mt-1">
+          💡 此畫面為唯讀鎖定模式。直接點擊任意【分隊名稱】即可開啟查看該分隊的案件詳細清單。
+        </p>
+      </div>
+    </div>
+
+    <!-- Upper Squad Cases Input Table (Hidden in Read-Only Mode) -->
+    <section id="upperSquadSection" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+      <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
+        <div class="flex items-center gap-2.5">
+          <span class="w-3 h-7 bg-emerald-600 rounded-full inline-block"></span>
+          <h2 class="text-xl md:text-2xl font-bold text-slate-800">各分隊案件數量</h2>
+        </div>
+        <div class="text-sm bg-slate-100 text-slate-600 px-3 py-1.5 rounded-md font-medium flex items-center gap-2">
+          <span>💡 分隊名稱已鎖定固定；填寫案件數或匯入 Excel 時，0 件之分隊將自動略過不指派</span>
+        </div>
+      </div>
+
+      <table id="squadTable" class="excel-table w-full text-center select-none">
+        <thead>
+          <tr class="bg-slate-200 font-bold text-slate-800">
+            <th colspan="10" class="py-2.5 text-xl md:text-2xl border-black tracking-wide">各分隊案件數量</th>
+          </tr>
+        </thead>
+        <tbody id="squadTableBody"><tr><td rowspan="2" class="bg-slate-200 font-bold px-3 py-3 w-32 text-slate-800 align-middle border-black text-xl">第一大隊</td><td class="p-1.5 font-bold transition-all relative border-black bg-rose-100 text-rose-950 border-2 border-rose-600 shadow-sm" title="已指派給：尊文 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-rose-950">斗六</span>
+                <span class="text-xs bg-rose-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>尊文
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-rose-100 text-rose-950 border-2 border-rose-600 shadow-sm" title="已指派給：尊文 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-rose-950">六合</span>
+                <span class="text-xs bg-rose-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>尊文
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-slate-100 text-slate-400 cursor-not-allowed" title="案件數為 0，無需指派">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-slate-400">公園</span>
+                <span class="text-[11px] text-slate-400 font-medium leading-none mt-1">無案件</span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-emerald-100 text-emerald-950 border-2 border-emerald-600 shadow-sm" title="已指派給：孝威 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-emerald-950">林內</span>
+                <span class="text-xs bg-emerald-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>孝威
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-indigo-100 text-indigo-950 border-2 border-indigo-600 shadow-sm" title="已指派給：國仲 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-indigo-950">古坑</span>
+                <span class="text-xs bg-indigo-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>國仲
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-violet-100 text-violet-950 border-2 border-violet-600 shadow-sm" title="已指派給：建勳 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-violet-950">莿桐</span>
+                <span class="text-xs bg-violet-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>建勳
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-amber-100 text-amber-950 border-2 border-amber-600 shadow-sm" title="已指派給：冠澄 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-amber-950">斗南</span>
+                <span class="text-xs bg-amber-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>冠澄
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-teal-100 text-teal-950 border-2 border-teal-600 shadow-sm" title="已指派給：鐘慶 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-teal-950">大埤</span>
+                <span class="text-xs bg-teal-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>鐘慶
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-slate-100 text-slate-400 cursor-not-allowed" title="案件數為 0，無需指派">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-slate-400">草嶺</span>
+                <span class="text-[11px] text-slate-400 font-medium leading-none mt-1">無案件</span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td></tr><tr><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="3" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="0" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="2" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="3" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="2" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="0" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td></tr><tr><td rowspan="2" class="bg-slate-200 font-bold px-3 py-3 w-32 text-slate-800 align-middle border-black text-xl">第二大隊</td><td class="p-1.5 font-bold transition-all relative border-black bg-emerald-100 text-emerald-950 border-2 border-emerald-600 shadow-sm" title="已指派給：孝威 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-emerald-950">虎尾</span>
+                <span class="text-xs bg-emerald-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>孝威
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-emerald-100 text-emerald-950 border-2 border-emerald-600 shadow-sm" title="已指派給：孝威 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-emerald-950">西螺</span>
+                <span class="text-xs bg-emerald-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>孝威
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-sky-100 text-sky-950 border-2 border-sky-600 shadow-sm" title="已指派給：儒謙 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-sky-950">土庫</span>
+                <span class="text-xs bg-sky-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>儒謙
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-violet-100 text-violet-950 border-2 border-violet-600 shadow-sm" title="已指派給：建勳 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-violet-950">二崙</span>
+                <span class="text-xs bg-violet-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>建勳
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-rose-100 text-rose-950 border-2 border-rose-600 shadow-sm" title="已指派給：尊文 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-rose-950">崙背</span>
+                <span class="text-xs bg-rose-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>尊文
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-rose-100 text-rose-950 border-2 border-rose-600 shadow-sm" title="已指派給：尊文 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-rose-950">褒忠</span>
+                <span class="text-xs bg-rose-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>尊文
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-slate-100 text-slate-400 cursor-not-allowed" title="案件數為 0，無需指派">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-slate-400">元長</span>
+                <span class="text-[11px] text-slate-400 font-medium leading-none mt-1">無案件</span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-teal-100 text-teal-950 border-2 border-teal-600 shadow-sm" title="已指派給：鐘慶 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-teal-950">高鐵</span>
+                <span class="text-xs bg-teal-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>鐘慶
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td colspan="1" class="bg-slate-50 border-black"></td></tr><tr><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="3" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="4" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="4" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="0" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="4" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td colspan="1" class="bg-slate-50 border-black"></td></tr><tr><td rowspan="2" class="bg-slate-200 font-bold px-3 py-3 w-32 text-slate-800 align-middle border-black text-xl">第三大隊</td><td class="p-1.5 font-bold transition-all relative border-black bg-slate-100 text-slate-400 cursor-not-allowed" title="案件數為 0，無需指派">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-slate-400">北港</span>
+                <span class="text-[11px] text-slate-400 font-medium leading-none mt-1">無案件</span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-emerald-100 text-emerald-950 border-2 border-emerald-600 shadow-sm" title="已指派給：孝威 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-emerald-950">東勢</span>
+                <span class="text-xs bg-emerald-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>孝威
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-indigo-100 text-indigo-950 border-2 border-indigo-600 shadow-sm" title="已指派給：國仲 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-indigo-950">水林</span>
+                <span class="text-xs bg-indigo-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>國仲
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-amber-100 text-amber-950 border-2 border-amber-600 shadow-sm" title="已指派給：冠澄 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-amber-950">四湖</span>
+                <span class="text-xs bg-amber-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>冠澄
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-slate-100 text-slate-400 cursor-not-allowed" title="案件數為 0，無需指派">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-slate-400">口湖</span>
+                <span class="text-[11px] text-slate-400 font-medium leading-none mt-1">無案件</span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-sky-100 text-sky-950 border-2 border-sky-600 shadow-sm" title="已指派給：儒謙 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-sky-950">台西</span>
+                <span class="text-xs bg-sky-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>儒謙
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-amber-100 text-amber-950 border-2 border-amber-600 shadow-sm" title="已指派給：冠澄 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-amber-950">麥寮</span>
+                <span class="text-xs bg-amber-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>冠澄
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td class="p-1.5 font-bold transition-all relative border-black bg-amber-100 text-amber-950 border-2 border-amber-600 shadow-sm" title="已指派給：冠澄 (點擊可解除指派)">
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none text-amber-950">北五</span>
+                <span class="text-xs bg-amber-700 text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>冠澄
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            </td><td colspan="1" class="bg-slate-50 border-black"></td></tr><tr><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="0" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="5" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="0" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="2" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td class="bg-white p-1.5 border-black">
+            <input type="number" min="0" value="1" class="cell-input text-2xl font-extrabold text-slate-800 py-1">
+          </td><td colspan="1" class="bg-slate-50 border-black"></td></tr></tbody>
+      </table>
+
+      <!-- Summary Row -->
+      <div class="mt-4 flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center gap-3 text-xl md:text-2xl font-bold">
+          <span class="text-slate-700">總數</span>
+          <span id="grandTotalCases" class="text-3xl md:text-4xl text-blue-600 font-black">42</span>
+          <span class="text-slate-600">件</span>
+        </div>
+        <div id="importInfoTag" class="text-sm text-slate-500 italic">已成功依據 Excel 載入 45 筆案件並自動統計！</div>
+      </div>
+    </section>
+
+    <!-- Lower Allocation Unit Section (Always visible, read-only when exported) -->
+    <section id="lowerAssignSection" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <div class="flex items-center gap-4">
+          <span class="w-3 h-7 bg-blue-600 rounded-full inline-block"></span>
+          <h2 class="text-xl md:text-2xl font-bold text-slate-800">分配單位</h2>
+          <div class="flex items-center bg-slate-100 rounded-lg px-3 py-1.5 border border-slate-300">
+            <input id="monthInput" type="text" value="8月" class="bg-transparent text-slate-800 text-lg font-bold w-24 text-center focus:outline-none" title="月份標籤">
+            <i id="monthEditIcon" class="fa-solid fa-pen text-sm text-slate-400"></i>
+          </div>
+        </div>
+
+        <div id="adminAssignControls" class="flex items-center gap-3">
+          <button id="addPersonBtn" class="text-base bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg flex items-center gap-2 transition">
+            <i class="fa-solid fa-user-plus"></i> 新增品管人員
+          </button>
+        </div>
+      </div>
+
+      <table id="assignTable" class="excel-table w-full text-center">
+        <thead>
+          <tr class="bg-slate-100 text-slate-800 font-bold text-lg">
+            <th class="w-40 py-2.5">品管人員</th>
+            <th colspan="5" class="py-2.5">指派分隊 <span id="assignTableColSubtext" class="text-sm font-normal text-slate-600">(點選分隊可退回或檢視)</span></th>
+            <th class="w-32 py-2.5">總數</th>
+            <th id="opHeaderCol" class="w-20 py-2.5 no-export">操作</th>
+          </tr>
+        </thead>
+        <tbody id="assignTableBody"><tr class="transition-colors border-black " style="cursor: pointer;"><td class="bg-emerald-100 border-black font-bold py-3.5 px-3 border-l-4 border-emerald-600">
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-2 flex-1">
+                <span class="w-3.5 h-3.5 rounded-full bg-emerald-700 inline-block flex-shrink-0" title="孝威 專屬色彩"></span>
+                <input type="text" value="孝威" class="cell-input font-black text-2xl md:text-3xl text-emerald-950 tracking-wide text-left" title="可修改姓名">
+              </div>
+              
+            </div>
+          </td><td class="border-black font-semibold text-center min-w-[110px] bg-emerald-100 hover:bg-emerald-200 transition cursor-pointer border-2 border-emerald-600" title="【虎尾】(3件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-emerald-950 leading-none">
+                    <span class="text-2xl font-black">虎尾</span>
+                    <span class="text-2xl font-black text-blue-800">(3)</span>
+                  </div>
+                  <span class="text-xs text-emerald-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-emerald-100 hover:bg-emerald-200 transition cursor-pointer border-2 border-emerald-600" title="【西螺】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-emerald-950 leading-none">
+                    <span class="text-2xl font-black">西螺</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-emerald-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-emerald-100 hover:bg-emerald-200 transition cursor-pointer border-2 border-emerald-600" title="【東勢】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-emerald-950 leading-none">
+                    <span class="text-2xl font-black">東勢</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-emerald-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-emerald-100 hover:bg-emerald-200 transition cursor-pointer border-2 border-emerald-600" title="【林內】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-emerald-950 leading-none">
+                    <span class="text-2xl font-black">林內</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-emerald-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="bg-white font-black text-3xl md:text-4xl text-blue-700 py-3.5 px-3 border-black text-center">6</td><td class="no-export py-2 border-black text-center">
+            <button onclick="deletePerson(0)" class="text-slate-400 hover:text-rose-600 p-2 transition" title="刪除此人員">
+              <i class="fa-solid fa-trash-can text-xl"></i>
+            </button>
+          </td></tr><tr class="transition-colors border-black " style="cursor: pointer;"><td class="bg-sky-100 border-black font-bold py-3.5 px-3 border-l-4 border-sky-600">
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-2 flex-1">
+                <span class="w-3.5 h-3.5 rounded-full bg-sky-700 inline-block flex-shrink-0" title="儒謙 專屬色彩"></span>
+                <input type="text" value="儒謙" class="cell-input font-black text-2xl md:text-3xl text-sky-950 tracking-wide text-left" title="可修改姓名">
+              </div>
+              
+            </div>
+          </td><td class="border-black font-semibold text-center min-w-[110px] bg-sky-100 hover:bg-sky-200 transition cursor-pointer border-2 border-sky-600" title="【土庫】(4件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-sky-950 leading-none">
+                    <span class="text-2xl font-black">土庫</span>
+                    <span class="text-2xl font-black text-blue-800">(4)</span>
+                  </div>
+                  <span class="text-xs text-sky-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-sky-100 hover:bg-sky-200 transition cursor-pointer border-2 border-sky-600" title="【台西】(2件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-sky-950 leading-none">
+                    <span class="text-2xl font-black">台西</span>
+                    <span class="text-2xl font-black text-blue-800">(2)</span>
+                  </div>
+                  <span class="text-xs text-sky-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="bg-white font-black text-3xl md:text-4xl text-blue-700 py-3.5 px-3 border-black text-center">6</td><td class="no-export py-2 border-black text-center">
+            <button onclick="deletePerson(1)" class="text-slate-400 hover:text-rose-600 p-2 transition" title="刪除此人員">
+              <i class="fa-solid fa-trash-can text-xl"></i>
+            </button>
+          </td></tr><tr class="transition-colors border-black " style="cursor: pointer;"><td class="bg-violet-100 border-black font-bold py-3.5 px-3 border-l-4 border-violet-600">
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-2 flex-1">
+                <span class="w-3.5 h-3.5 rounded-full bg-violet-700 inline-block flex-shrink-0" title="建勳 專屬色彩"></span>
+                <input type="text" value="建勳" class="cell-input font-black text-2xl md:text-3xl text-violet-950 tracking-wide text-left" title="可修改姓名">
+              </div>
+              
+            </div>
+          </td><td class="border-black font-semibold text-center min-w-[110px] bg-violet-100 hover:bg-violet-200 transition cursor-pointer border-2 border-violet-600" title="【二崙】(4件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-violet-950 leading-none">
+                    <span class="text-2xl font-black">二崙</span>
+                    <span class="text-2xl font-black text-blue-800">(4)</span>
+                  </div>
+                  <span class="text-xs text-violet-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-violet-100 hover:bg-violet-200 transition cursor-pointer border-2 border-violet-600" title="【莿桐】(2件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-violet-950 leading-none">
+                    <span class="text-2xl font-black">莿桐</span>
+                    <span class="text-2xl font-black text-blue-800">(2)</span>
+                  </div>
+                  <span class="text-xs text-violet-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="bg-white font-black text-3xl md:text-4xl text-blue-700 py-3.5 px-3 border-black text-center">6</td><td class="no-export py-2 border-black text-center">
+            <button onclick="deletePerson(2)" class="text-slate-400 hover:text-rose-600 p-2 transition" title="刪除此人員">
+              <i class="fa-solid fa-trash-can text-xl"></i>
+            </button>
+          </td></tr><tr class="transition-colors border-black " style="cursor: pointer;"><td class="bg-amber-100 border-black font-bold py-3.5 px-3 border-l-4 border-amber-600">
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-2 flex-1">
+                <span class="w-3.5 h-3.5 rounded-full bg-amber-700 inline-block flex-shrink-0" title="冠澄 專屬色彩"></span>
+                <input type="text" value="冠澄" class="cell-input font-black text-2xl md:text-3xl text-amber-950 tracking-wide text-left" title="可修改姓名">
+              </div>
+              
+            </div>
+          </td><td class="border-black font-semibold text-center min-w-[110px] bg-amber-100 hover:bg-amber-200 transition cursor-pointer border-2 border-amber-600" title="【斗南】(3件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-amber-950 leading-none">
+                    <span class="text-2xl font-black">斗南</span>
+                    <span class="text-2xl font-black text-blue-800">(3)</span>
+                  </div>
+                  <span class="text-xs text-amber-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-amber-100 hover:bg-amber-200 transition cursor-pointer border-2 border-amber-600" title="【麥寮】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-amber-950 leading-none">
+                    <span class="text-2xl font-black">麥寮</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-amber-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-amber-100 hover:bg-amber-200 transition cursor-pointer border-2 border-amber-600" title="【北五】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-amber-950 leading-none">
+                    <span class="text-2xl font-black">北五</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-amber-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-amber-100 hover:bg-amber-200 transition cursor-pointer border-2 border-amber-600" title="【四湖】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-amber-950 leading-none">
+                    <span class="text-2xl font-black">四湖</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-amber-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="bg-white font-black text-3xl md:text-4xl text-blue-700 py-3.5 px-3 border-black text-center">6</td><td class="no-export py-2 border-black text-center">
+            <button onclick="deletePerson(3)" class="text-slate-400 hover:text-rose-600 p-2 transition" title="刪除此人員">
+              <i class="fa-solid fa-trash-can text-xl"></i>
+            </button>
+          </td></tr><tr class="transition-colors border-black " style="cursor: pointer;"><td class="bg-rose-100 border-black font-bold py-3.5 px-3 border-l-4 border-rose-600">
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-2 flex-1">
+                <span class="w-3.5 h-3.5 rounded-full bg-rose-700 inline-block flex-shrink-0" title="尊文 專屬色彩"></span>
+                <input type="text" value="尊文" class="cell-input font-black text-2xl md:text-3xl text-rose-950 tracking-wide text-left" title="可修改姓名">
+              </div>
+              
+            </div>
+          </td><td class="border-black font-semibold text-center min-w-[110px] bg-rose-100 hover:bg-rose-200 transition cursor-pointer border-2 border-rose-600" title="【崙背】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-rose-950 leading-none">
+                    <span class="text-2xl font-black">崙背</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-rose-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-rose-100 hover:bg-rose-200 transition cursor-pointer border-2 border-rose-600" title="【褒忠】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-rose-950 leading-none">
+                    <span class="text-2xl font-black">褒忠</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-rose-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-rose-100 hover:bg-rose-200 transition cursor-pointer border-2 border-rose-600" title="【六合】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-rose-950 leading-none">
+                    <span class="text-2xl font-black">六合</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-rose-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-rose-100 hover:bg-rose-200 transition cursor-pointer border-2 border-rose-600" title="【斗六】(3件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-rose-950 leading-none">
+                    <span class="text-2xl font-black">斗六</span>
+                    <span class="text-2xl font-black text-blue-800">(3)</span>
+                  </div>
+                  <span class="text-xs text-rose-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="bg-white font-black text-3xl md:text-4xl text-blue-700 py-3.5 px-3 border-black text-center">6</td><td class="no-export py-2 border-black text-center">
+            <button onclick="deletePerson(4)" class="text-slate-400 hover:text-rose-600 p-2 transition" title="刪除此人員">
+              <i class="fa-solid fa-trash-can text-xl"></i>
+            </button>
+          </td></tr><tr class="transition-colors border-black " style="cursor: pointer;"><td class="bg-teal-100 border-black font-bold py-3.5 px-3 border-l-4 border-teal-600">
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-2 flex-1">
+                <span class="w-3.5 h-3.5 rounded-full bg-teal-700 inline-block flex-shrink-0" title="鐘慶 專屬色彩"></span>
+                <input type="text" value="鐘慶" class="cell-input font-black text-2xl md:text-3xl text-teal-950 tracking-wide text-left" title="可修改姓名">
+              </div>
+              
+            </div>
+          </td><td class="border-black font-semibold text-center min-w-[110px] bg-teal-100 hover:bg-teal-200 transition cursor-pointer border-2 border-teal-600" title="【大埤】(2件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-teal-950 leading-none">
+                    <span class="text-2xl font-black">大埤</span>
+                    <span class="text-2xl font-black text-blue-800">(2)</span>
+                  </div>
+                  <span class="text-xs text-teal-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-teal-100 hover:bg-teal-200 transition cursor-pointer border-2 border-teal-600" title="【高鐵】(4件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-teal-950 leading-none">
+                    <span class="text-2xl font-black">高鐵</span>
+                    <span class="text-2xl font-black text-blue-800">(4)</span>
+                  </div>
+                  <span class="text-xs text-teal-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="bg-white font-black text-3xl md:text-4xl text-blue-700 py-3.5 px-3 border-black text-center">6</td><td class="no-export py-2 border-black text-center">
+            <button onclick="deletePerson(5)" class="text-slate-400 hover:text-rose-600 p-2 transition" title="刪除此人員">
+              <i class="fa-solid fa-trash-can text-xl"></i>
+            </button>
+          </td></tr><tr class="transition-colors border-black row-selected bg-blue-50" style="cursor: pointer;"><td class="bg-indigo-100 border-black font-bold py-3.5 px-3 border-l-4 border-indigo-600">
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-2 flex-1">
+                <span class="w-3.5 h-3.5 rounded-full bg-indigo-700 inline-block flex-shrink-0" title="國仲 專屬色彩"></span>
+                <input type="text" value="國仲" class="cell-input font-black text-2xl md:text-3xl text-indigo-950 tracking-wide text-left" title="可修改姓名">
+              </div>
+              <i class="fa-solid fa-check-circle text-blue-600 text-lg flex-shrink-0"></i>
+            </div>
+          </td><td class="border-black font-semibold text-center min-w-[110px] bg-indigo-100 hover:bg-indigo-200 transition cursor-pointer border-2 border-indigo-600" title="【水林】(5件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-indigo-950 leading-none">
+                    <span class="text-2xl font-black">水林</span>
+                    <span class="text-2xl font-black text-blue-800">(5)</span>
+                  </div>
+                  <span class="text-xs text-indigo-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-indigo-100 hover:bg-indigo-200 transition cursor-pointer border-2 border-indigo-600" title="【古坑】(1件) - 點擊可退回分隊或檢視">
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 text-indigo-950 leading-none">
+                    <span class="text-2xl font-black">古坑</span>
+                    <span class="text-2xl font-black text-blue-800">(1)</span>
+                  </div>
+                  <span class="text-xs text-indigo-950 opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              </td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="border-black font-semibold text-center min-w-[110px] bg-[#fff2cc]"><span class="text-transparent text-2xl select-none">.</span></td><td class="bg-white font-black text-3xl md:text-4xl text-blue-700 py-3.5 px-3 border-black text-center">6</td><td class="no-export py-2 border-black text-center">
+            <button onclick="deletePerson(6)" class="text-slate-400 hover:text-rose-600 p-2 transition" title="刪除此人員">
+              <i class="fa-solid fa-trash-can text-xl"></i>
+            </button>
+          </td></tr></tbody>
+      </table>
+    </section>
+
+  </div>
+
+  <!-- Modal: Set Password for Export -->
+  <div id="exportPasswordModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md p-6 animate-in fade-in zoom-in duration-200">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-slate-800">匯出密碼保護設定</h3>
+          <p class="text-xs text-slate-500">上傳至 GitHub Pages 可防止外部人員直接查看</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 my-5">
+        <div>
+          <label class="block text-sm font-bold text-slate-700 mb-1.5">設定檢視密碼（留空則不加密）：</label>
+          <input id="newExportPassword" type="password" placeholder="請設定密碼 (例: 119ohca)" class="w-full text-base px-3.5 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none">
+        </div>
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-900 space-y-1">
+          <p class="font-bold flex items-center gap-1"><i class="fa-solid fa-lightbulb"></i> 安全提示：</p>
+          <p>若設定密碼，系統將採用軍規 AES-GCM 加密資料，開啟網頁時必須輸入密碼才能解密呈現，保護個資安全。</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
+        <button id="cancelExportPassBtn" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition text-sm">取消</button>
+        <button id="confirmExportPassBtn" class="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg shadow-sm transition text-sm flex items-center gap-2">
+          <i class="fa-solid fa-download"></i> 確認並匯出 HTML
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case Records Detail Modal Popup -->
+  <div id="caseDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-slate-800 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xl">
+            <i class="fa-solid fa-folder-open"></i>
+          </div>
+          <div>
+            <h3 class="text-xl md:text-2xl font-bold flex items-center gap-2">
+              <span id="modalSquadName">分隊案件明細</span>
+              <span id="modalSquadCountBadge" class="text-sm bg-emerald-500 text-white px-2.5 py-0.5 rounded-full font-semibold">0 件</span>
+            </h3>
+            <p class="text-xs md:text-sm text-slate-300 mt-0.5" id="modalSquadSubtitle">出勤紀錄與病患資訊列表</p>
+          </div>
+        </div>
+        <button id="closeModalBtn" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-700 transition">
+          <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Table of records) -->
+      <div class="p-6 overflow-y-auto flex-1 bg-slate-50">
+        <div id="modalEmptyNotice" class="hidden py-12 text-center text-slate-400">
+          <i class="fa-regular fa-file-excel text-5xl mb-3 block text-slate-300"></i>
+          <p class="text-lg font-medium">尚未匯入案件明細 Excel，或此分隊查無出勤紀錄</p>
+          <p class="text-sm mt-1">請利用上方「匯入案件 EXCEL」按鈕載入 OHCA 案件原始表格。</p>
+        </div>
+
+        <div id="modalTableWrapper" class="overflow-x-auto bg-white rounded-lg border border-slate-200 shadow-sm">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 font-bold text-base border-b border-slate-200">
+                <th class="py-3 px-3 w-16 text-center">序號</th>
+                <th class="py-3 px-3 w-48">報案日期及時間</th>
+                <th class="py-3 px-3 w-28">姓名</th>
+                <th class="py-3 px-3 w-36">送抵醫院</th>
+                <th class="py-3 px-3 w-32">出勤單位</th>
+                <th class="py-3 px-4">出勤人員</th>
+                <th class="py-3 px-3 w-28">備註</th>
+              </tr>
+            </thead>
+            <tbody id="modalCaseTableBody" class="divide-y divide-slate-200 text-base text-slate-800">
+              <!-- Populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 bg-white border-t border-slate-200 flex items-center justify-between">
+        <span class="text-sm text-slate-500 font-medium" id="modalFooterInfo">雲林縣消防局 OHCA 品管分配表</span>
+        <button id="modalCloseBtn2" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-lg transition">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Box -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl text-base transition-all duration-300 transform z-50 flex items-center gap-3 opacity-0 translate-y-3 pointer-events-none">
+    <i class="fa-solid fa-circle-check text-emerald-400 text-xl" id="toastIcon"></i>
+    <span id="toastMsg">🔒 已匯出「密碼加密保護」唯讀 HTML (密碼: 11911907)！請上傳至 GitHub Pages。</span>
+  </div>
+
+  <script>
+    /* __PERSISTED_STATE_START__ */
+    let IS_READ_ONLY = true;
+    let IS_ENCRYPTED = true;
+    let ENCRYPTED_CIPHERTEXT = "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";
+    let ENCRYPTED_SALT = "ypdM2TdK34rXuv2ziL3iBg==";
+    let ENCRYPTED_IV = "StZUyku67EM2wa0M";
+
+    let initialBattalions = [];
+    let allocationRows = [];
+    let savedMonth = "7月";
+    let caseDatabase = [];
+    let importedReportTitle = "";
+    /* __PERSISTED_STATE_END__ */
+
+    // Distinct vibrant pastel color themes for each quality control personnel
+    const PERSON_COLOR_PALETTES = [
+      { id: "emerald", bg: "bg-emerald-100", border: "border-emerald-600", badgeBg: "bg-emerald-700", text: "text-emerald-950", hoverBg: "hover:bg-emerald-200" },
+      { id: "sky",     bg: "bg-sky-100",     border: "border-sky-600",     badgeBg: "bg-sky-700",     text: "text-sky-950",     hoverBg: "hover:bg-sky-200" },
+      { id: "violet",  bg: "bg-violet-100",  border: "border-violet-600",  badgeBg: "bg-violet-700",  text: "text-violet-950",  hoverBg: "hover:bg-violet-200" },
+      { id: "amber",   bg: "bg-amber-100",   border: "border-amber-600",   badgeBg: "bg-amber-700",   text: "text-amber-950",   hoverBg: "hover:bg-amber-200" },
+      { id: "rose",    bg: "bg-rose-100",    border: "border-rose-600",    badgeBg: "bg-rose-700",    text: "text-rose-950",    hoverBg: "hover:bg-rose-200" },
+      { id: "teal",    bg: "bg-teal-100",    border: "border-teal-600",    badgeBg: "bg-teal-700",    text: "text-teal-950",    hoverBg: "hover:bg-teal-200" },
+      { id: "indigo",  bg: "bg-indigo-100",  border: "border-indigo-600",  badgeBg: "bg-indigo-700",  text: "text-indigo-950",  hoverBg: "hover:bg-indigo-200" },
+      { id: "orange",  bg: "bg-orange-100",  border: "border-orange-600",  badgeBg: "bg-orange-700",  text: "text-orange-950",  hoverBg: "hover:bg-orange-200" },
+      { id: "pink",    bg: "bg-pink-100",    border: "border-pink-600",    badgeBg: "bg-pink-700",    text: "text-pink-950",    hoverBg: "hover:bg-pink-200" },
+      { id: "cyan",    bg: "bg-cyan-100",    border: "border-cyan-600",    badgeBg: "bg-cyan-700",    text: "text-cyan-950",    hoverBg: "hover:bg-cyan-200" }
+    ];
+
+    function getPersonPalette(personIndex) {
+      return PERSON_COLOR_PALETTES[personIndex % PERSON_COLOR_PALETTES.length];
+    }
+
+    let battalions = JSON.parse(JSON.stringify(initialBattalions));
+    let currentSelectedPersonId = allocationRows.length > 0 ? allocationRows[0].id : null;
+
+    // Web Crypto API (PBKDF2 + AES-GCM) Helpers
+    async function deriveKey(password, salt) {
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(password),
+        { name: "PBKDF2" },
+        false,
+        ["deriveKey"]
+      );
+      return crypto.subtle.deriveKey(
+        {
+          name: "PBKDF2",
+          salt: salt,
+          iterations: 100000,
+          hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["encrypt", "decrypt"]
+      );
+    }
+
+    async function encryptPayload(dataObj, password) {
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveKey(password, salt);
+      const enc = new TextEncoder();
+      const encodedData = enc.encode(JSON.stringify(dataObj));
+      const cipherBuffer = await crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv },
+        key,
+        encodedData
+      );
+      
+      const b64Cipher = btoa(String.fromCharCode(...new Uint8Array(cipherBuffer)));
+      const b64Salt = btoa(String.fromCharCode(...salt));
+      const b64Iv = btoa(String.fromCharCode(...iv));
+      return { ciphertext: b64Cipher, salt: b64Salt, iv: b64Iv };
+    }
+
+    async function decryptPayload(b64Cipher, b64Salt, b64Iv, password) {
+      try {
+        const salt = Uint8Array.from(atob(b64Salt), c => c.charCodeAt(0));
+        const iv = Uint8Array.from(atob(b64Iv), c => c.charCodeAt(0));
+        const cipherData = Uint8Array.from(atob(b64Cipher), c => c.charCodeAt(0));
+        const key = await deriveKey(password, salt);
+
+        const decryptedBuffer = await crypto.subtle.decrypt(
+          { name: "AES-GCM", iv: iv },
+          key,
+          cipherData
+        );
+        const dec = new TextDecoder();
+        return JSON.parse(dec.decode(decryptedBuffer));
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // Toast helper
+    function showToast(message, isSuccess = true) {
+      const toast = document.getElementById("toast");
+      const toastMsg = document.getElementById("toastMsg");
+      const toastIcon = document.getElementById("toastIcon");
+
+      toastMsg.textContent = message;
+      if (isSuccess) {
+        toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-xl";
+      } else {
+        toastIcon.className = "fa-solid fa-circle-exclamation text-amber-400 text-xl";
+      }
+
+      toast.classList.remove("opacity-0", "translate-y-3", "pointer-events-none");
+      toast.classList.add("opacity-100", "translate-y-0");
+      setTimeout(() => {
+        toast.classList.remove("opacity-100", "translate-y-0");
+        toast.classList.add("opacity-0", "translate-y-3", "pointer-events-none");
+      }, 2800);
+    }
+
+    function getSquadById(id) {
+      for (const b of battalions) {
+        const found = b.squads.find(s => s.id === id);
+        if (found) return found;
+      }
+      return null;
+    }
+
+    function getSquadByName(name) {
+      const cleanTarget = (name || "").replace(/分隊$/, "").trim();
+      for (const b of battalions) {
+        for (const sq of b.squads) {
+          const cleanSq = sq.name.replace(/分隊$/, "").trim();
+          if (cleanSq === cleanTarget || sq.name === name) {
+            return sq;
+          }
+        }
+      }
+      return null;
+    }
+
+    function getAssignmentOfSquad(squadId) {
+      for (let idx = 0; idx < allocationRows.length; idx++) {
+        const row = allocationRows[idx];
+        if (row.type === 'person' && row.assignedSquadIds.includes(squadId)) {
+          return { person: row, index: idx, palette: getPersonPalette(idx) };
+        }
+      }
+      return null;
+    }
+
+    function renderSquadTable() {
+      if (IS_READ_ONLY) return;
+
+      const tbody = document.getElementById("squadTableBody");
+      tbody.innerHTML = "";
+
+      let grandTotal = 0;
+      let assignedCount = 0;
+      let totalSquads = 0;
+
+      battalions.forEach(bat => {
+        const nameRow = document.createElement("tr");
+        const countRow = document.createElement("tr");
+
+        const batHeader = document.createElement("td");
+        batHeader.rowSpan = 2;
+        batHeader.className = "bg-slate-200 font-bold px-3 py-3 w-32 text-slate-800 align-middle border-black text-xl";
+        batHeader.textContent = bat.name;
+        nameRow.appendChild(batHeader);
+
+        bat.squads.forEach(sq => {
+          totalSquads++;
+          const countVal = Number(sq.count) || 0;
+          grandTotal += countVal;
+          const assignedInfo = getAssignmentOfSquad(sq.id);
+          if (assignedInfo) assignedCount++;
+
+          const nameTd = document.createElement("td");
+          nameTd.className = "p-1.5 font-bold transition-all relative border-black ";
+
+          if (assignedInfo) {
+            const { person, palette } = assignedInfo;
+            nameTd.className += `${palette.bg} ${palette.text} border-2 ${palette.border} shadow-sm`;
+            nameTd.title = `已指派給：${person.name} (點擊可解除指派)`;
+          } else if (countVal === 0) {
+            nameTd.className += "bg-slate-100 text-slate-400 cursor-not-allowed";
+            nameTd.title = "案件數為 0，無需指派";
+          } else {
+            nameTd.className += "bg-[#c6e0b4] hover:bg-emerald-300 text-slate-900 cursor-pointer";
+            nameTd.title = "點擊將此分隊指派給目前選取的品管人員";
+          }
+
+          if (assignedInfo) {
+            const { person, palette } = assignedInfo;
+            nameTd.innerHTML = `
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none ${palette.text}">${sq.name}</span>
+                <span class="text-xs ${palette.badgeBg} text-white font-bold px-2 py-0.5 rounded-full mt-1 whitespace-nowrap shadow-sm">
+                  <i class="fa-solid fa-user-check text-[10px] mr-1"></i>${person.name}
+                </span>
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            `;
+          } else {
+            nameTd.innerHTML = `
+              <div class="flex flex-col items-center justify-center min-h-[52px] px-1 relative group">
+                <span class="squad-name-text text-xl font-bold leading-snug select-none ${countVal === 0 ? 'text-slate-400' : 'text-slate-900'}">${sq.name}</span>
+                ${countVal === 0 ? '<span class="text-[11px] text-slate-400 font-medium leading-none mt-1">無案件</span>' : ''}
+                <button class="view-squad-btn absolute top-0.5 right-0.5 text-slate-500 hover:text-blue-700 text-xs p-1 opacity-60 hover:opacity-100" title="檢視此分隊案件明細">
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+              </div>
+            `;
+          }
+
+          const viewBtn = nameTd.querySelector(".view-squad-btn");
+          viewBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openSquadCaseModal(sq.name);
+          });
+
+          nameTd.addEventListener("click", () => {
+            handleSquadCellClick(sq.id);
+          });
+
+          nameRow.appendChild(nameTd);
+
+          const countTd = document.createElement("td");
+          countTd.className = "bg-white p-1.5 border-black";
+          countTd.innerHTML = `
+            <input type="number" min="0" value="${sq.count}" class="cell-input text-2xl font-extrabold text-slate-800 py-1" />
+          `;
+
+          const countInput = countTd.querySelector("input");
+          countInput.addEventListener("input", (e) => {
+            const val = parseInt(e.target.value, 10);
+            sq.count = isNaN(val) ? 0 : val;
+            if (sq.count === 0) {
+              allocationRows.forEach(r => {
+                if (r.assignedSquadIds.includes(sq.id)) {
+                  r.assignedSquadIds = r.assignedSquadIds.filter(id => id !== sq.id);
+                }
+              });
+            }
+            updateTotals();
+            renderSquadTable();
+          });
+
+          countRow.appendChild(countTd);
+        });
+
+        const remainingCols = 9 - bat.squads.length;
+        if (remainingCols > 0) {
+          const emptyNameTd = document.createElement("td");
+          emptyNameTd.colSpan = remainingCols;
+          emptyNameTd.className = "bg-slate-50 border-black";
+          nameRow.appendChild(emptyNameTd);
+
+          const emptyCountTd = document.createElement("td");
+          emptyCountTd.colSpan = remainingCols;
+          emptyCountTd.className = "bg-slate-50 border-black";
+          countRow.appendChild(emptyCountTd);
+        }
+
+        tbody.appendChild(nameRow);
+        tbody.appendChild(countRow);
+      });
+
+      document.getElementById("grandTotalCases").textContent = grandTotal;
+      document.getElementById("statProgress").textContent = `已指派: ${assignedCount} / ${totalSquads} 分隊`;
+    }
+
+    function handleSquadCellClick(squadId) {
+      if (IS_READ_ONLY) return;
+
+      const assignedInfo = getAssignmentOfSquad(squadId);
+      const squad = getSquadById(squadId);
+
+      if (assignedInfo) {
+        assignedInfo.person.assignedSquadIds = assignedInfo.person.assignedSquadIds.filter(id => id !== squadId);
+        renderSquadTable();
+        renderAllocationTable();
+        showToast(`已解除【${squad.name}】指派 (原指派給 ${assignedInfo.person.name})`, false);
+        return;
+      }
+
+      const countVal = Number(squad.count) || 0;
+      if (countVal <= 0) {
+        showToast(`⚠️ 【${squad.name}】案件數為 0，無需指派品管！`, false);
+        return;
+      }
+
+      if (!currentSelectedPersonId) {
+        showToast("⚠️ 請先在下方點選要分配的「品管人員」！", false);
+        return;
+      }
+
+      const activePerson = allocationRows.find(r => r.id === currentSelectedPersonId && r.type === 'person');
+      if (!activePerson) {
+        showToast("⚠️ 請選取有效品管人員！", false);
+        return;
+      }
+
+      activePerson.assignedSquadIds.push(squadId);
+      renderSquadTable();
+      renderAllocationTable();
+      showToast(`已將【${squad.name}】(${countVal}件) 分配給【${activePerson.name}】`);
+    }
+
+    function renderAllocationTable() {
+      const tbody = document.getElementById("assignTableBody");
+      tbody.innerHTML = "";
+
+      const activePerson = allocationRows.find(r => r.id === currentSelectedPersonId && r.type === 'person');
+      const statusText = document.getElementById("currentStatusText");
+      if (statusText) {
+        if (activePerson) {
+          statusText.innerHTML = `目前選取人員：<strong class="text-blue-700 underline text-lg font-bold">${activePerson.name}</strong>。點選上方有案件的分隊即可指派（0件分隊自動略過）。`;
+        } else {
+          statusText.textContent = "請在下方表格點選品管人員進行選取。";
+        }
+      }
+
+      allocationRows.forEach((row, rowIndex) => {
+        const tr = document.createElement("tr");
+        const isSelected = !IS_READ_ONLY && row.id === currentSelectedPersonId;
+        const palette = getPersonPalette(rowIndex);
+        tr.className = `transition-colors border-black ${isSelected ? 'row-selected bg-blue-50' : ''}`;
+
+        // Person Name Cell
+        const nameTd = document.createElement("td");
+        nameTd.className = `${palette.bg} border-black font-bold py-3.5 px-3 border-l-4 ${palette.border}`;
+
+        if (IS_READ_ONLY) {
+          nameTd.innerHTML = `
+            <div class="flex items-center justify-center gap-2">
+              <span class="w-3 h-3 rounded-full ${palette.badgeBg} inline-block"></span>
+              <span class="font-black text-2xl md:text-3xl ${palette.text} tracking-wide">${row.name}</span>
+            </div>
+          `;
+        } else {
+          nameTd.innerHTML = `
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-2 flex-1">
+                <span class="w-3.5 h-3.5 rounded-full ${palette.badgeBg} inline-block flex-shrink-0" title="${row.name} 專屬色彩"></span>
+                <input type="text" value="${row.name}" class="cell-input font-black text-2xl md:text-3xl ${palette.text} tracking-wide text-left" title="可修改姓名" />
+              </div>
+              ${isSelected ? '<i class="fa-solid fa-check-circle text-blue-600 text-lg flex-shrink-0"></i>' : ''}
+            </div>
+          `;
+          const nameInput = nameTd.querySelector("input");
+          nameInput.addEventListener("click", (e) => e.stopPropagation());
+          nameInput.addEventListener("change", (e) => {
+            row.name = e.target.value.trim() || "未具名";
+            renderSquadTable();
+            renderAllocationTable();
+          });
+        }
+
+        tr.appendChild(nameTd);
+
+        // 5 Squad Slots
+        let personTotal = 0;
+        const maxSlots = 5;
+
+        for (let i = 0; i < maxSlots; i++) {
+          const slotTd = document.createElement("td");
+          slotTd.className = "border-black font-semibold text-center min-w-[110px]";
+
+          if (i < row.assignedSquadIds.length) {
+            const sqId = row.assignedSquadIds[i];
+            const squad = getSquadById(sqId);
+            if (squad) {
+              const countVal = Number(squad.count) || 0;
+              personTotal += countVal;
+              slotTd.className += ` ${palette.bg} ${palette.hoverBg} transition cursor-pointer border-2 ${palette.border}`;
+              
+              if (IS_READ_ONLY) {
+                slotTd.title = `點擊查看【${squad.name}】全部案件詳細清單`;
+              } else {
+                slotTd.title = `【${squad.name}】(${countVal}件) - 點擊可退回分隊或檢視`;
+              }
+
+              slotTd.innerHTML = `
+                <div class="py-2.5 px-1.5 flex flex-col items-center justify-center">
+                  <div class="flex items-baseline justify-center gap-1.5 ${palette.text} leading-none">
+                    <span class="text-2xl font-black">${squad.name}</span>
+                    <span class="text-2xl font-black text-blue-800">(${countVal})</span>
+                  </div>
+                  <span class="text-xs ${palette.text} opacity-80 font-bold mt-1 tracking-wider"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> 案件明細</span>
+                </div>
+              `;
+
+              slotTd.addEventListener("click", (e) => {
+                e.stopPropagation();
+                if (IS_READ_ONLY) {
+                  openSquadCaseModal(squad.name);
+                } else {
+                  openSquadCaseModal(squad.name, () => {
+                    row.assignedSquadIds.splice(i, 1);
+                    renderSquadTable();
+                    renderAllocationTable();
+                    showToast(`已退回分隊【${squad.name}】`);
+                  });
+                }
+              });
+
+            } else {
+              slotTd.className += " bg-[#fff2cc]";
+            }
+          } else {
+            slotTd.className += " bg-[#fff2cc]";
+            slotTd.innerHTML = `<span class="text-transparent text-2xl select-none">.</span>`;
+          }
+
+          tr.appendChild(slotTd);
+        }
+
+        // Total cell
+        const totalTd = document.createElement("td");
+        totalTd.className = "bg-white font-black text-3xl md:text-4xl text-blue-700 py-3.5 px-3 border-black text-center";
+        totalTd.textContent = personTotal;
+        tr.appendChild(totalTd);
+
+        if (!IS_READ_ONLY) {
+          const actionTd = document.createElement("td");
+          actionTd.className = "no-export py-2 border-black text-center";
+          actionTd.innerHTML = `
+            <button onclick="deletePerson(${rowIndex})" class="text-slate-400 hover:text-rose-600 p-2 transition" title="刪除此人員">
+              <i class="fa-solid fa-trash-can text-xl"></i>
+            </button>
+          `;
+          actionTd.addEventListener("click", (e) => e.stopPropagation());
+          tr.appendChild(actionTd);
+
+          tr.style.cursor = "pointer";
+          tr.addEventListener("click", () => {
+            currentSelectedPersonId = row.id;
+            renderAllocationTable();
+          });
+        }
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.deletePerson = function(index) {
+      if (IS_READ_ONLY) return;
+      const row = allocationRows[index];
+      if (row.assignedSquadIds.length > 0) {
+        showToast(`已刪除人員【${row.name}】並釋出分隊`, false);
+      }
+      allocationRows.splice(index, 1);
+      if (currentSelectedPersonId === row.id) {
+        const nextPerson = allocationRows.find(r => r.type === 'person');
+        currentSelectedPersonId = nextPerson ? nextPerson.id : null;
+      }
+      renderSquadTable();
+      renderAllocationTable();
+    };
+
+    function updateTotals() {
+      let grandTotal = 0;
+      battalions.forEach(b => {
+        b.squads.forEach(s => {
+          grandTotal += Number(s.count) || 0;
+        });
+      });
+      document.getElementById("grandTotalCases").textContent = grandTotal;
+      renderAllocationTable();
+    }
+
+    function openSquadCaseModal(squadName, onRemoveCallback = null) {
+      const modal = document.getElementById("caseDetailModal");
+      const titleSpan = document.getElementById("modalSquadName");
+      const countBadge = document.getElementById("modalSquadCountBadge");
+      const tbody = document.getElementById("modalCaseTableBody");
+      const emptyNotice = document.getElementById("modalEmptyNotice");
+      const tableWrapper = document.getElementById("modalTableWrapper");
+
+      const cleanSquadName = (squadName || "").replace(/分隊$/, "").trim();
+      titleSpan.textContent = cleanSquadName + "分隊 - 案件紀錄";
+
+      const matchedCases = caseDatabase.filter(item => {
+        const unit = (item["出勤單位"] || item["出勤分隊"] || "").replace(/分隊$/, "").trim();
+        return unit === cleanSquadName;
+      });
+
+      countBadge.textContent = `${matchedCases.length} 件`;
+      tbody.innerHTML = "";
+
+      if (matchedCases.length === 0) {
+        emptyNotice.classList.remove("hidden");
+        tableWrapper.classList.add("hidden");
+      } else {
+        emptyNotice.classList.add("hidden");
+        tableWrapper.classList.remove("hidden");
+
+        matchedCases.forEach((record, idx) => {
+          const tr = document.createElement("tr");
+          tr.className = "hover:bg-blue-50/60 transition border-b border-slate-100";
+
+          tr.innerHTML = `
+            <td class="py-2.5 px-3 text-center font-bold text-slate-500">${record["序號"] || (idx + 1)}</td>
+            <td class="py-2.5 px-3 whitespace-nowrap text-slate-700 font-medium">${record["報案日期及時間"] || record["報案時間"] || "-"}</td>
+            <td class="py-2.5 px-3 font-bold text-slate-900">${record["姓名"] || "不詳"}</td>
+            <td class="py-2.5 px-3 text-slate-700"><span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-medium">${record["送抵醫院"] || "-"}</span></td>
+            <td class="py-2.5 px-3 font-bold text-emerald-800">${record["出勤單位"] || (cleanSquadName + "分隊")}</td>
+            <td class="py-2.5 px-4 text-slate-800 font-semibold">${record["出勤人員"] || "-"}</td>
+            <td class="py-2.5 px-3 text-sm text-slate-500">${record["備註"] || "-"}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      modal.classList.remove("hidden");
+      modal.classList.add("modal-active");
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("caseDetailModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("modal-active");
+    }
+
+    document.getElementById("closeModalBtn").addEventListener("click", closeModal);
+    document.getElementById("modalCloseBtn2").addEventListener("click", closeModal);
+    document.getElementById("caseDetailModal").addEventListener("click", (e) => {
+      if (e.target === document.getElementById("caseDetailModal")) {
+        closeModal();
+      }
+    });
+
+    document.getElementById("excelFileInput").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const data = new Uint8Array(evt.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
+
+          if (rows.length < 2) {
+            showToast("⚠️ 檔案內容為空或無有效資料！", false);
+            return;
+          }
+
+          let headerRowIndex = -1;
+          for (let i = 0; i < Math.min(rows.length, 10); i++) {
+            const rowStr = rows[i].join(" ");
+            if (rowStr.includes("出勤單位") || rowStr.includes("報案日期") || rowStr.includes("送抵醫院")) {
+              headerRowIndex = i;
+              break;
+            }
+          }
+
+          if (headerRowIndex === -1) headerRowIndex = 0;
+
+          const headers = rows[headerRowIndex].map(h => String(h).trim());
+          const unitColIdx = headers.findIndex(h => h.includes("出勤單位") || h.includes("單位"));
+
+          if (unitColIdx === -1) {
+            showToast("❌ 未在 Excel 中找到「出勤單位」欄位，請確認表頭格式！", false);
+            return;
+          }
+
+          if (headerRowIndex > 0 && rows[0].length > 0) {
+            importedReportTitle = rows[0].join(" ").trim();
+          }
+
+          const parsedCases = [];
+          const squadCaseCounts = {};
+
+          for (let i = headerRowIndex + 1; i < rows.length; i++) {
+            const row = rows[i];
+            if (!row || row.filter(cell => String(cell).trim() !== "").length === 0) continue;
+
+            const caseObj = {};
+            headers.forEach((h, colIdx) => {
+              caseObj[h] = row[colIdx] !== undefined ? String(row[colIdx]).trim() : "";
+            });
+
+            const rawUnit = caseObj[headers[unitColIdx]] || "";
+            const cleanUnit = rawUnit.replace(/分隊$/, "").trim();
+
+            if (cleanUnit) {
+              squadCaseCounts[cleanUnit] = (squadCaseCounts[cleanUnit] || 0) + 1;
+            }
+            parsedCases.push(caseObj);
+          }
+
+          caseDatabase = parsedCases;
+
+          battalions.forEach(bat => {
+            bat.squads.forEach(sq => {
+              const cleanSq = sq.name.replace(/分隊$/, "").trim();
+              if (squadCaseCounts.hasOwnProperty(cleanSq)) {
+                sq.count = squadCaseCounts[cleanSq];
+              } else {
+                sq.count = 0;
+              }
+            });
+          });
+
+          if (importedReportTitle) {
+            const monthMatch = importedReportTitle.match(/([0-9]{1,2})月/);
+            if (monthMatch) {
+              document.getElementById("monthInput").value = monthMatch[1] + "月";
+              savedMonth = monthMatch[1] + "月";
+            }
+          }
+
+          updateTotals();
+          renderSquadTable();
+          renderAllocationTable();
+
+          const badge = document.getElementById("importedCasesBadge");
+          badge.classList.remove("hidden");
+          badge.innerHTML = `<i class="fa-solid fa-database mr-1"></i>已載入 ${parsedCases.length} 筆案件`;
+          document.getElementById("importInfoTag").textContent = `已成功依據 Excel 載入 ${parsedCases.length} 筆案件並自動統計！`;
+          showToast(`✅ 成功匯入 ${parsedCases.length} 筆案件！各分隊件數已自動帶入！`);
+        } catch (err) {
+          console.error(err);
+          showToast("❌ 讀取 Excel 失敗，請確認檔案格式是否相符", false);
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
+
+    document.getElementById("autoAssignBtn").addEventListener("click", () => {
+      if (IS_READ_ONLY) return;
+
+      const people = allocationRows.filter(r => r.type === 'person');
+      if (people.length === 0) {
+        showToast("⚠️ 請先新增至少一位品管人員！", false);
+        return;
+      }
+
+      const allSquads = [];
+      let zeroCountSquads = 0;
+
+      battalions.forEach(b => {
+        b.squads.forEach(s => {
+          const count = Number(s.count) || 0;
+          if (count > 0) {
+            allSquads.push({
+              id: s.id,
+              name: s.name,
+              count: count
+            });
+          } else {
+            zeroCountSquads++;
+          }
+        });
+      });
+
+      if (allSquads.length === 0) {
+        showToast("⚠️ 目前所有分隊案件數皆為 0，無需指派！", false);
+        return;
+      }
+
+      people.forEach(p => {
+        p.assignedSquadIds = [];
+      });
+
+      allSquads.sort((a, b) => b.count - a.count);
+
+      const buckets = people.map(p => ({
+        person: p,
+        totalCases: 0,
+        squads: []
+      }));
+
+      allSquads.forEach(squad => {
+        buckets.sort((a, b) => {
+          if (a.totalCases !== b.totalCases) {
+            return a.totalCases - b.totalCases;
+          }
+          return a.squads.length - b.squads.length;
+        });
+
+        buckets[0].squads.push(squad.id);
+        buckets[0].totalCases += squad.count;
+      });
+
+      buckets.forEach(b => {
+        b.person.assignedSquadIds = b.squads;
+      });
+
+      renderSquadTable();
+      renderAllocationTable();
+
+      const counts = buckets.map(b => b.totalCases);
+      const minCases = Math.min(...counts);
+      const maxCases = Math.max(...counts);
+      showToast(`✨ 分案完成！已自動略過 ${zeroCountSquads} 個 0 件分隊，各員分配件數介於 ${minCases} 至 ${maxCases} 件之間`);
+    });
+
+    document.getElementById("addPersonBtn").addEventListener("click", () => {
+      if (IS_READ_ONLY) return;
+      const nameInput = prompt("請輸入品管人員姓名：", "新同仁");
+      if (nameInput && nameInput.trim()) {
+        const newId = "p_" + Date.now();
+        allocationRows.push({
+          id: newId,
+          type: "person",
+          name: nameInput.trim(),
+          assignedSquadIds: []
+        });
+        currentSelectedPersonId = newId;
+        renderAllocationTable();
+        showToast(`已新增品管人員：${nameInput.trim()}`);
+      }
+    });
+
+    document.getElementById("resetAssignmentsBtn").addEventListener("click", () => {
+      if (IS_READ_ONLY) return;
+      allocationRows.forEach(r => {
+        r.assignedSquadIds = [];
+      });
+      renderSquadTable();
+      renderAllocationTable();
+      showToast("已清空所有分隊分配！", false);
+    });
+
+    function exportToExcel() {
+      const rawMonth = (document.getElementById("monthInput").value || "8").trim();
+      const monthNumMatch = rawMonth.match(/\d+/);
+      const cleanMonth = monthNumMatch ? monthNumMatch[0] : rawMonth.replace(/月份?$/, "");
+      const fileName = `${cleanMonth}月份OHCA分配表.xlsx`;
+
+      const wb = XLSX.utils.book_new();
+      const sheetData = [];
+
+      sheetData.push(["各分隊案件數量"]);
+
+      battalions.forEach(b => {
+        const nameRow = [b.name];
+        const countRow = [""];
+        b.squads.forEach(sq => {
+          nameRow.push(sq.name);
+          countRow.push(sq.count);
+        });
+        sheetData.push(nameRow);
+        sheetData.push(countRow);
+      });
+
+      sheetData.push([]);
+      sheetData.push(["總數", document.getElementById("grandTotalCases") ? document.getElementById("grandTotalCases").textContent + " 件" : ""]);
+      sheetData.push([]);
+
+      sheetData.push(["分配單位"]);
+      sheetData.push([`${cleanMonth}月份`, "", "", "", "", "", "總數"]);
+
+      allocationRows.forEach(r => {
+        let sum = 0;
+        const assignedNames = r.assignedSquadIds.map(sqId => {
+          const sq = getSquadById(sqId);
+          if (sq) {
+            sum += Number(sq.count) || 0;
+            return sq.name;
+          }
+          return "";
+        });
+
+        while (assignedNames.length < 5) {
+          assignedNames.push("");
+        }
+
+        sheetData.push([r.name, ...assignedNames, sum]);
+      });
+
+      const ws = XLSX.utils.aoa_to_sheet(sheetData);
+      ws['!cols'] = [
+        { wch: 14 }, { wch: 11 }, { wch: 11 }, { wch: 11 }, { wch: 11 },
+        { wch: 11 }, { wch: 11 }, { wch: 11 }, { wch: 11 }, { wch: 11 }
+      ];
+
+      XLSX.utils.book_append_sheet(wb, ws, "案件品管分配表");
+
+      if (caseDatabase.length > 0) {
+        const caseSheet = XLSX.utils.json_to_sheet(caseDatabase);
+        XLSX.utils.book_append_sheet(wb, caseSheet, "OHCA案件明細清單");
+      }
+
+      XLSX.writeFile(wb, fileName);
+      showToast(`✅ 已成功匯出【${fileName}】！`);
+    }
+
+    document.getElementById("exportExcelBtn").addEventListener("click", exportToExcel);
+
+    // Open password modal
+    document.getElementById("exportReadOnlyHtmlBtn").addEventListener("click", () => {
+      document.getElementById("newExportPassword").value = "";
+      const modal = document.getElementById("exportPasswordModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("modal-active");
+    });
+
+    document.getElementById("cancelExportPassBtn").addEventListener("click", () => {
+      const modal = document.getElementById("exportPasswordModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("modal-active");
+    });
+
+    document.getElementById("confirmExportPassBtn").addEventListener("click", async () => {
+      const modal = document.getElementById("exportPasswordModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("modal-active");
+
+      const monthVal = document.getElementById("monthInput").value || "8月";
+      const pass = document.getElementById("newExportPassword").value.trim();
+
+      const rawMonth = monthVal.trim();
+      const monthNumMatch = rawMonth.match(/\d+/);
+      const cleanMonth = monthNumMatch ? monthNumMatch[0] : rawMonth.replace(/月份?$/, "");
+
+      let stateBlock = "";
+
+      if (pass) {
+        // Encrypt confidential data using AES-GCM
+        const sensitiveData = {
+          battalions: battalions,
+          allocationRows: allocationRows,
+          savedMonth: monthVal,
+          caseDatabase: caseDatabase,
+          importedReportTitle: importedReportTitle
+        };
+
+        const encResult = await encryptPayload(sensitiveData, pass);
+
+        stateBlock = `/* __PERSISTED_STATE_START__ */\n` +
+          `    let IS_READ_ONLY = true;\n` +
+          `    let IS_ENCRYPTED = true;\n` +
+          `    let ENCRYPTED_CIPHERTEXT = ${JSON.stringify(encResult.ciphertext)};\n` +
+          `    let ENCRYPTED_SALT = ${JSON.stringify(encResult.salt)};\n` +
+          `    let ENCRYPTED_IV = ${JSON.stringify(encResult.iv)};\n\n` +
+          `    let initialBattalions = [];\n` +
+          `    let allocationRows = [];\n` +
+          `    let savedMonth = ${JSON.stringify(monthVal)};\n` +
+          `    let caseDatabase = [];\n` +
+          `    let importedReportTitle = "";\n` +
+          `    /* __PERSISTED_STATE_END__ */`;
+      } else {
+        // Plain read-only export
+        stateBlock = `/* __PERSISTED_STATE_START__ */\n` +
+          `    let IS_READ_ONLY = true;\n` +
+          `    let IS_ENCRYPTED = false;\n` +
+          `    let ENCRYPTED_CIPHERTEXT = "";\n` +
+          `    let ENCRYPTED_SALT = "";\n` +
+          `    let ENCRYPTED_IV = "";\n\n` +
+          `    let initialBattalions = ${JSON.stringify(battalions, null, 2)};\n` +
+          `    let allocationRows = ${JSON.stringify(allocationRows, null, 2)};\n` +
+          `    let savedMonth = ${JSON.stringify(monthVal)};\n` +
+          `    let caseDatabase = ${JSON.stringify(caseDatabase, null, 2)};\n` +
+          `    let importedReportTitle = ${JSON.stringify(importedReportTitle)};\n` +
+          `    /* __PERSISTED_STATE_END__ */`;
+      }
+
+      let currentHtml = document.documentElement.outerHTML;
+      const regex = /\/\* __PERSISTED_STATE_START__ \*\/[\s\S]*?\/\* __PERSISTED_STATE_END__ \*\//;
+      let serializedHtml = "<!DOCTYPE html>\n" + currentHtml.replace(regex, stateBlock);
+
+      const blob = new Blob([serializedHtml], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = `${cleanMonth}月份OHCA品管分配結果.html`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      if (pass) {
+        showToast(`🔒 已匯出「密碼加密保護」唯讀 HTML (密碼: ${pass})！請上傳至 GitHub Pages。`);
+      } else {
+        showToast(`📥 唯讀模式 HTML 已匯出！`);
+      }
+    });
+
+    async function handleUnlock() {
+      const passInput = document.getElementById("decryptPasswordInput");
+      const errBox = document.getElementById("unlockErrorMsg");
+      const password = passInput.value.trim();
+
+      if (!password) {
+        errBox.classList.remove("hidden");
+        errBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> 請輸入密碼！';
+        return;
+      }
+
+      const decrypted = await decryptPayload(ENCRYPTED_CIPHERTEXT, ENCRYPTED_SALT, ENCRYPTED_IV, password);
+
+      if (!decrypted) {
+        errBox.classList.remove("hidden");
+        errBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> 密碼錯誤，無法解密！';
+        passInput.focus();
+        return;
+      }
+
+      // Restore decrypted state
+      battalions = decrypted.battalions || [];
+      allocationRows = decrypted.allocationRows || [];
+      savedMonth = decrypted.savedMonth || "8月";
+      caseDatabase = decrypted.caseDatabase || [];
+      importedReportTitle = decrypted.importedReportTitle || "";
+
+      // Hide lock screen
+      const lockOverlay = document.getElementById("passwordLockOverlay");
+      lockOverlay.classList.remove("flex");
+      lockOverlay.classList.add("hidden");
+
+      // Render decrypted view
+      document.getElementById("readOnlyTitle").textContent = `${savedMonth} 各分隊案件品管分配結果`;
+      renderAllocationTable();
+      showToast("🔓 密碼正確，解密成功！");
+    }
+
+    document.getElementById("unlockSubmitBtn").addEventListener("click", handleUnlock);
+    document.getElementById("decryptPasswordInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleUnlock();
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (typeof savedMonth !== "undefined") {
+        document.getElementById("monthInput").value = savedMonth;
+      }
+
+      if (IS_READ_ONLY) {
+        // Enforce Read-Only presentation
+        document.getElementById("adminToolbar").classList.add("hidden");
+        document.getElementById("adminNoticeCard").classList.add("hidden");
+        document.getElementById("upperSquadSection").classList.add("hidden");
+        document.getElementById("adminAssignControls").classList.add("hidden");
+        document.getElementById("opHeaderCol").classList.add("hidden");
+        document.getElementById("monthEditIcon").classList.add("hidden");
+
+        const monthInput = document.getElementById("monthInput");
+        monthInput.setAttribute("disabled", "true");
+        monthInput.classList.add("cursor-default");
+
+        document.getElementById("readOnlyBanner").classList.remove("hidden");
+        document.getElementById("readOnlyTitle").textContent = `${savedMonth} 各分隊案件品管分配結果`;
+        document.getElementById("assignTableColSubtext").textContent = "(點擊任意分隊即可查看出勤案件明細)";
+
+        if (IS_ENCRYPTED) {
+          // Show password lock overlay
+          const lockOverlay = document.getElementById("passwordLockOverlay");
+          lockOverlay.classList.remove("hidden");
+          lockOverlay.classList.add("flex");
+          setTimeout(() => document.getElementById("decryptPasswordInput").focus(), 150);
+        } else {
+          renderAllocationTable();
+        }
+      } else {
+        renderSquadTable();
+        renderAllocationTable();
+      }
+    });
+  </script>
+
+</body></html>
