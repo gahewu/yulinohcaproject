@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>雲林縣消防局 - OHCA 案件品管分配表專區</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .portal-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 480px;
+      padding: 32px 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    p.subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    .menu-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .menu-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      background: #273549;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 16px;
+      border: 1px solid #3b4d66;
+      transition: all 0.2s ease;
+    }
+    .menu-link:hover {
+      background: #dc2626;
+      border-color: #ef4444;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35);
+    }
+    .link-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .title-text {
+      font-size: 16px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .link-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .arrow {
+      font-size: 18px;
+      color: #94a3b8;
+      transition: color 0.2s;
+    }
+    .menu-link:hover .arrow {
+      color: #ffffff;
+    }
+    /* Tag Color Classes */
+    .color-emerald .dot { background: #34d399; }
+    .color-emerald .tag { background: rgba(52, 211, 153, 0.15); border-color: rgba(52, 211, 153, 0.3); color: #34d399; }
+    
+    .color-rose .dot { background: #f87171; }
+    .color-rose .tag { background: rgba(248, 113, 113, 0.15); border-color: rgba(248, 113, 113, 0.3); color: #f87171; }
+    
+    .color-blue .dot { background: #38bdf8; }
+    .color-blue .tag { background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.3); color: #38bdf8; }
+
+    .color-amber .dot { background: #fbbf24; }
+    .color-amber .tag { background: rgba(251, 191, 36, 0.15); border-color: rgba(251, 191, 36, 0.3); color: #fbbf24; }
+
+    .color-purple .dot { background: #c084fc; }
+    .color-purple .tag { background: rgba(192, 132, 252, 0.15); border-color: rgba(192, 132, 252, 0.3); color: #c084fc; }
+
+    .color-slate .dot { background: #94a3b8; }
+    .color-slate .tag { background: #334155; border-color: #475569; color: #cbd5e1; }
+
+    .footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #334155;
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    /* Lock Overlay */
+    .lock-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin: 16px 0;
+    }
+    .lock-input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: #ffffff;
+      font-size: 16px;
+      text-align: center;
+      outline: none;
+      margin-top: 12px;
+      letter-spacing: 2px;
+    }
+    .lock-input:focus {
+      border-color: #ef4444;
+    }
+    .lock-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .lock-btn:hover {
+      background: #dc2626;
+    }
+    .error-msg {
+      color: #f87171;
+      font-size: 12px;
+      margin-top: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="portal-card">
+    <div class="header">
+      <div class="badge">雲林縣消防局</div>
+      <h1>OHCA 案件品管分配表專區</h1>
+      <p class="subtitle" id="portalSubtitle">請點選欲查閱之月份（點入後輸入專屬密碼解鎖）</p>
+    </div>
+
+    <!-- Password Lock Section (if enabled) -->
+    <div id="passwordSection" style="display: none;">
+      <div class="lock-box">
+        <div style="font-size: 28px; margin-bottom: 8px;">🔒</div>
+        <div style="font-size: 14px; font-weight: 700; color: #f1f5f9;">此首頁受存取密碼保護</div>
+        <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">請輸入訪問密碼以顯示月份清單</div>
+        <input id="portalPassInput" type="password" placeholder="請輸入首頁密碼" class="lock-input" />
+        <div id="unlockError" class="error-msg">⚠️ 密碼不正確，請重新輸入</div>
+        <button id="unlockBtn" class="lock-btn">解鎖進入</button>
+      </div>
+    </div>
+
+    <!-- Month Menu Section -->
+    <div id="menuContainer" class="menu-container" style="display: flex;">
+      <!-- Populated dynamically -->
+    </div>
+
+    <div class="footer">
+      🔒 各月份案件明細受密碼保護，請向品管承辦洽詢
+    </div>
+  </div>
+
+  <script>
+    const IS_ENCRYPTED = false;
+    const ENCRYPTED_CIPHERTEXT = "";
+    const ENCRYPTED_SALT = "";
+    const ENCRYPTED_IV = "";
+    let monthItems = [
+  {
+    "id": "item_1",
+    "title": "115 年 8 月分配表",
+    "filename": "2026-08.html",
+    "tagText": "最新",
+    "tagColor": "blue"
+  },
+  {
+    "id": "item_1789359796598",
+    "title": "115 年 7 月分配表",
+    "filename": "2026-07.html",
+    "tagText": "",
+    "tagColor": "blue"
+  }
+];
+
+    function renderMenu(items) {
+      const container = document.getElementById("menuContainer");
+      container.innerHTML = "";
+      if (!items || items.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding: 20px; color:#64748b; font-size:13px;">目前尚無開放之月份分配表</div>';
+        return;
+      }
+      items.forEach(function(item) {
+        const link = document.createElement("a");
+        link.href = item.filename || "#";
+        link.className = "menu-link color-" + (item.tagColor || "emerald");
+        
+        let tagHtml = "";
+        if (item.tagText) {
+          tagHtml = '<span class="tag">' + escapeText(item.tagText) + '</span>';
+        }
+
+        link.innerHTML = 
+          '<div class="link-left">' +
+            '<span class="dot"></span>' +
+            '<span class="title-text">' + escapeText(item.title) + '</span>' +
+          '</div>' +
+          '<div class="link-right">' +
+            tagHtml +
+            '<span class="arrow">➔</span>' +
+          '</div>';
+
+        container.appendChild(link);
+      });
+    }
+
+    function escapeText(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Decryption Routine
+    async function deriveKey(password, salt) {
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey(
+        "raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveKey"]
+      );
+      return crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+        keyMaterial, { name: "AES-GCM", length: 256 }, false, ["decrypt"]
+      );
+    }
+
+    async function decryptData(b64Cipher, b64Salt, b64Iv, password) {
+      try {
+        const salt = Uint8Array.from(atob(b64Salt), c => c.charCodeAt(0));
+        const iv = Uint8Array.from(atob(b64Iv), c => c.charCodeAt(0));
+        const cipherData = Uint8Array.from(atob(b64Cipher), c => c.charCodeAt(0));
+        const key = await deriveKey(password, salt);
+        const decryptedBuffer = await crypto.subtle.decrypt(
+          { name: "AES-GCM", iv: iv }, key, cipherData
+        );
+        const dec = new TextDecoder();
+        return JSON.parse(dec.decode(decryptedBuffer));
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function handleUnlock() {
+      const passInput = document.getElementById("portalPassInput");
+      const errBox = document.getElementById("unlockError");
+      const password = passInput.value.trim();
+      if (!password) {
+        errBox.style.display = "block";
+        errBox.textContent = "⚠️ 請輸入密碼！";
+        return;
+      }
+
+      const result = await decryptData(ENCRYPTED_CIPHERTEXT, ENCRYPTED_SALT, ENCRYPTED_IV, password);
+      if (!result || !result.items) {
+        errBox.style.display = "block";
+        errBox.textContent = "⚠️ 密碼錯誤，請重新確認！";
+        passInput.focus();
+        return;
+      }
+
+      monthItems = result.items;
+      document.getElementById("passwordSection").style.display = "none";
+      const menu = document.getElementById("menuContainer");
+      menu.style.display = "flex";
+      renderMenu(monthItems);
+    }
+
+    if (IS_ENCRYPTED) {
+      document.getElementById("unlockBtn").addEventListener("click", handleUnlock);
+      document.getElementById("portalPassInput").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") handleUnlock();
+      });
+      setTimeout(function() {
+        document.getElementById("portalPassInput").focus();
+      }, 100);
+    } else {
+      renderMenu(monthItems);
+    }
+  </script>
+</body>
+</html>
